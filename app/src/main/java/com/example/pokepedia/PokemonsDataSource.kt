@@ -1,22 +1,26 @@
 package com.example.pokepedia
 
-import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.example.pokepedia.api.PokemonService
+import com.example.pokepedia.models.NetworkState
 import com.example.pokepedia.models.PokemonModel
+
 
 class PokemonsDataSource(
     private val service: PokemonService
 ) : PageKeyedDataSource<Int, PokemonModel>() {
 
-    private var nextPageUrl = ""
-    private var previousPageUrl = ""
+    private val networkState: MutableLiveData<NetworkState> = MutableLiveData<NetworkState>()
+    private var nextPageUrl: String? = null
+    private var previousPageUrl: String? = null
 
     override fun loadInitial(
         params: LoadInitialParams<Int>,
         callback: LoadInitialCallback<Int, PokemonModel>
     ) {
-        Log.i("йцйцйцйцйц", "loadInitial вызван")
+        networkState.postValue(NetworkState.LOADING)
+
         val currentPage = 1
         val nextPage = currentPage + 1
 
@@ -25,42 +29,53 @@ class PokemonsDataSource(
                 nextPageUrl = it.nextPageUrl
                 it.pokemonList
             }
+            .doOnNext { networkState.postValue(NetworkState.LOADED) }
+            .doOnError {
+                networkState.postValue(
+                    NetworkState(
+                        NetworkState.Status.FAILED,
+                        it.message.orEmpty()
+                    )
+                )
+            }
             .blockingFirst()
 
         callback.onResult(list, 0, nextPage)
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, PokemonModel>) {
-        Log.i("йцйцйцйцйц", "loadAfter вызван")
+        networkState.postValue(NetworkState.LOADING)
 
         val currentPage = params.key
         val nextPage = currentPage + 1
 
-        val list = service.getNextPage(nextPageUrl)
-            .map {
-                previousPageUrl = it.previousPageUrl
-                nextPageUrl = it.nextPageUrl
-                it.pokemonList
-            }
-            .blockingFirst()
+        nextPageUrl?.let { url ->
+            val list = service.getNextPage(url)
+                .map {
+                    previousPageUrl = it.previousPageUrl
+                    nextPageUrl = it.nextPageUrl
+                    it.pokemonList
+                }
+                .doOnNext { networkState.postValue(NetworkState.LOADED) }
+                .doOnError {
+                    networkState.postValue(
+                        NetworkState(
+                            NetworkState.Status.FAILED,
+                            it.message.orEmpty()
+                        )
+                    )
+                }
+                .blockingFirst()
 
-        callback.onResult(list, nextPage)
+            callback.onResult(list, nextPage)
+        }
     }
 
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, PokemonModel>) {
-//        Log.i("йцйцйцйцйц", "loadBefore вызван")
-//        val currentPage = params.key
-//        val nextPage = currentPage - 1
-//
-//        val list = service.getNextPage(previousPageUrl)
-//            .map {
-//                previousPageUrl = it.previousPageUrl
-//                nextPageUrl = it.nextPageUrl
-//                it.pokemonList
-//            }
-//            .blockingFirst()
-//
-//        callback.onResult(list, nextPage)
+    }
+
+    fun getNetworkState(): MutableLiveData<NetworkState> {
+        return networkState
     }
 }
