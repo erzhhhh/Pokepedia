@@ -2,16 +2,29 @@ package com.example.pokepedia.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokepedia.OnItemClickListener
 import com.example.pokepedia.databinding.ViewPokemonItemBinding
 import com.example.pokepedia.models.PokemonModel
 
+
 class PokemonRecyclerViewAdapter(
     var onItemClickListener: OnItemClickListener<PokemonModel>
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : PagedListAdapter<PokemonModel, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
-    private val items = ArrayList<PokemonModel>()
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<PokemonModel>() {
+            override fun areItemsTheSame(oldItem: PokemonModel, newItem: PokemonModel): Boolean {
+                return oldItem.name == newItem.name
+            }
+
+            override fun areContentsTheSame(oldItem: PokemonModel, newItem: PokemonModel): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return PokemonVH(
@@ -25,29 +38,20 @@ class PokemonRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val pm = items[position]
+        val pm = getItem(position)
         (holder as PokemonVH).bind(pm)
-    }
-
-    override fun getItemCount() = items.size
-
-    fun setItems(items: List<PokemonModel>?) {
-        this.items.clear()
-        this.items.addAll(items.orEmpty())
-        notifyDataSetChanged()
     }
 
     private class PokemonVH(
         private val binding: ViewPokemonItemBinding,
         onItemClickListener: OnItemClickListener<PokemonModel>
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.itemClickListener = onItemClickListener
         }
 
-        fun bind(pm: PokemonModel) {
+        fun bind(pm: PokemonModel?) {
             binding.pokemon = pm
         }
     }

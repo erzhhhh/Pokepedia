@@ -13,4 +13,7 @@ interface PokemonService {
 
     @GET
     fun getPokemonProperties(@Url url: String): Observable<PokemonDetailModel>
+
+    @GET
+    fun getNextPage(@Url url: String): Observable<PokemonResponse>
 }

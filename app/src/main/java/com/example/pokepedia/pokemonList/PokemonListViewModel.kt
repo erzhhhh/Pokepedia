@@ -1,36 +1,31 @@
 package com.example.pokepedia.pokemonList
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
+import com.example.pokepedia.NewsDataFactory
 import com.example.pokepedia.api.PokemonService
 import com.example.pokepedia.models.PokemonModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 class PokemonListViewModel(private val service: PokemonService) : ViewModel() {
 
-    private var _childModels = MutableLiveData<List<PokemonModel>>()
-    val childModels: LiveData<List<PokemonModel>>
-        get() = _childModels
+    private var _childModels = MutableLiveData<PagedList<PokemonModel>>()
+    var childModels: LiveData<PagedList<PokemonModel>> = _childModels
 
     init {
-        loadPokemonList()
+        initialize()
     }
 
-    @SuppressLint("CheckResult")
-    fun loadPokemonList() {
-        service.getPokemonsInfo()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    _childModels.value = it.pokemonList
-                },
-                {
+    private fun initialize() {
 
-                }
-            )
+        val pagedListConfig = PagedList.Config.Builder()
+            .setEnablePlaceholders(true)
+            .setInitialLoadSizeHint(20)
+            .setPageSize(20)
+            .build()
+
+        childModels = LivePagedListBuilder(NewsDataFactory(service), pagedListConfig).build()
     }
 }
