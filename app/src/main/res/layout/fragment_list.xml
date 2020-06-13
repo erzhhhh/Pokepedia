@@ -18,7 +18,6 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pokemonListRecycler"
         itemClickListener="@{itemClickListener}"
-        networkState="@{viewModel.networkState}"
         pokemonItems="@{viewModel.childModels}"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
