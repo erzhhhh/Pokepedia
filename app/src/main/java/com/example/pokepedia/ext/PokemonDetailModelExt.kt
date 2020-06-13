@@ -7,13 +7,15 @@ fun PokemonDetailModel.mapDetails(): PokemonDetailModel {
     var newWeight = ""
 
     try {
-        newHeight = (this.height.toFloat() / 10).toString()
+        val height = (this.height.toFloat() / 10).toString()
+        newHeight = "$height Metre"
     } catch (e: NumberFormatException) {
         // not a valid int
     }
 
     try {
-        newWeight = (this.weight.toFloat() / 10).toString()
+        val weight = (this.weight.toFloat() / 10).toString()
+        newWeight = "$weight Kilogram"
     } catch (e: NumberFormatException) {
         // not a valid int
     }

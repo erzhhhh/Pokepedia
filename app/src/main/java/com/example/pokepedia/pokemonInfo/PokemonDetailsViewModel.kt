@@ -23,12 +23,17 @@ class PokemonDetailsViewModel(
     val name: LiveData<String>
         get() = _name
 
+    private var _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
+
     init {
         loadPokemonDetails()
     }
 
     @SuppressLint("CheckResult")
     fun loadPokemonDetails() {
+        _isLoading.postValue(true)
         service.getPokemonProperties(url)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -36,6 +41,7 @@ class PokemonDetailsViewModel(
                 {
                     _childModel.value = it.mapDetails()
                     _name.value = it.name
+                    _isLoading.postValue(false)
                 },
                 {
 

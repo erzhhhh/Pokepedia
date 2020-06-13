@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="isLoading"
+            type="java.lang.Boolean" />
 
         <variable
             name="viewModel"
@@ -9,38 +16,69 @@
 
     </data>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingStart="@dimen/indent_16"
-        android:paddingTop="@dimen/indent_24"
-        android:paddingEnd="@dimen/indent_16"
-        android:paddingBottom="@dimen/indent_24">
+        android:layout_height="wrap_content">
 
-        <TextView
-            style="@style/HeaderTextStyle_18_Bold"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.name}" />
+            android:orientation="vertical"
+            android:paddingStart="@dimen/indent_16"
+            android:paddingTop="@dimen/indent_24"
+            android:paddingEnd="@dimen/indent_16"
+            android:paddingBottom="@dimen/indent_24">
 
-        <TextView
+            <TextView
+                android:id="@+id/nameTextView"
+                style="@style/HeaderTextStyle_18_Bold"
+                pokemonIsLoading="@{viewModel.isLoading}"
+                pokemonName="@{viewModel.childModel.name}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/heightTextView"
+                pokemonHeight="@{viewModel.childModel.height}"
+                pokemonIsLoading="@{viewModel.isLoading}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/indent_12"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/nameTextView" />
+
+            <TextView
+                android:id="@+id/weightTextView"
+                pokemonIsLoading="@{viewModel.isLoading}"
+                pokemonWeight="@{viewModel.childModel.weight}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/indent_12"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/heightTextView" />
+
+            <TextView
+                pokemonExp="@{viewModel.childModel.exp}"
+                pokemonIsLoading="@{viewModel.isLoading}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/indent_12"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/weightTextView" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ProgressBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/indent_12"
-            android:text="@{@string/pokemon_height(viewModel.childModel.height)}" />
+            android:layout_gravity="center_vertical"
+            android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.INVISIBLE}" />
+    </FrameLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/indent_12"
-            android:text="@{@string/pokemon_weight(viewModel.childModel.weight)}" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/indent_12"
-            android:text="@{@string/pokemon_exp(viewModel.childModel.exp)}" />
-
-    </LinearLayout>
 </layout>
