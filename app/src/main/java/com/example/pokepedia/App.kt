@@ -1,21 +1,21 @@
 package com.example.pokepedia
 
-import android.app.Application
+import androidx.multidex.MultiDexApplication
+import com.example.pokepedia.di.AppModule
 
-class App : Application() {
+class App : MultiDexApplication() {
 
-    companion object {
-        private lateinit var instance: App
-
-        @JvmStatic
-        lateinit var appComponent: AppComponent
-    }
+    lateinit var appComponent: AppComponent
 
     override fun onCreate() {
-        instance = this
         appComponent = DaggerAppComponent
             .builder()
-            .appModule(AppModule(this, "https://pokeapi.co/api/"))
+            .appModule(
+                AppModule(
+                    this,
+                    "https://pokeapi.co/api/"
+                )
+            )
             .build()
         super.onCreate()
     }

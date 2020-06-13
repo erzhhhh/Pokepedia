@@ -1,14 +1,16 @@
 package com.example.pokepedia.api
 
+import com.example.pokepedia.models.PokemonDetailModel
 import com.example.pokepedia.models.PokemonResponse
 import io.reactivex.Observable
 import retrofit2.http.GET
+import retrofit2.http.Url
 
 interface PokemonService {
-    //    @GET("films/?format=json")
-    @GET("v2/pokemon")
-    fun getFilms(): Observable<PokemonResponse>
 
-//    @GET("planets")
-//    fun getPlanets(): Observable<Planets>
+    @GET("v2/pokemon")
+    fun getPokemonsInfo(): Observable<PokemonResponse>
+
+    @GET
+    fun getPokemonProperties(@Url url: String): Observable<PokemonDetailModel>
 }

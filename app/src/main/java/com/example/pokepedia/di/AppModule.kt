@@ -1,4 +1,4 @@
-package com.example.pokepedia
+package com.example.pokepedia.di
 
 import android.content.Context
 import dagger.Module
@@ -34,7 +34,7 @@ open class AppModule(private val context: Context, private val baseUrl: String) 
     @Provides
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.HEADERS
+            level = HttpLoggingInterceptor.Level.BODY
         }
     }
 

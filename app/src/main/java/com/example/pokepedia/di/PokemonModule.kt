@@ -1,4 +1,4 @@
-package com.example.pokepedia
+package com.example.pokepedia.di
 
 import com.example.pokepedia.api.PokemonService
 import dagger.Module
