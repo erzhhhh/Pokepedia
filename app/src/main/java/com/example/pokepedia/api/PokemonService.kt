@@ -12,7 +12,7 @@ interface PokemonService {
     fun getPokemonsInfo(): Observable<PokemonResponse>
 
     @GET
-    fun getPokemonProperties(@Url url: String): Observable<PokemonDetailModel>
+    fun getPokemonDetails(@Url url: String): Observable<PokemonDetailModel>
 
     @GET
     fun getNextPage(@Url url: String): Observable<PokemonResponse>

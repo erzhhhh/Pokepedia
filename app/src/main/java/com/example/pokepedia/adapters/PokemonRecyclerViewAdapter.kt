@@ -41,7 +41,7 @@ class PokemonRecyclerViewAdapter(
 
         if (holder is PokemonVH) {
             val pm = getItem(position)
-            (holder as PokemonVH).bind(pm)
+            holder.bind(pm)
         }
     }
 

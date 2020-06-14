@@ -1,4 +1,4 @@
-package com.example.pokepedia.pokemonInfo
+package com.example.pokepedia.pokemonDetails
 
 import android.content.Context
 import android.os.Bundle

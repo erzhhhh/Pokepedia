@@ -23,7 +23,7 @@ class PokemonListViewModel(private val service: PokemonService) : ViewModel() {
     private fun initialize() {
         val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(true)
-            .setInitialLoadSizeHint(20)
+            .setInitialLoadSizeHint(30)
             .setPageSize(20)
             .build()
 

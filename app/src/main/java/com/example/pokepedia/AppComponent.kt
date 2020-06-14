@@ -2,7 +2,7 @@ package com.example.pokepedia
 
 import android.content.Context
 import com.example.pokepedia.di.AppModule
-import com.example.pokepedia.pokemonInfo.PokemonDetailsFragment
+import com.example.pokepedia.pokemonDetails.PokemonDetailsFragment
 import com.example.pokepedia.pokemonList.PokemonListFragment
 import dagger.Component
 import retrofit2.Retrofit

@@ -1,4 +1,4 @@
-package com.example.pokepedia.pokemonInfo
+package com.example.pokepedia.pokemonDetails
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
@@ -19,28 +19,23 @@ class PokemonDetailsViewModel(
     val childModel: LiveData<PokemonDetailModel>
         get() = _childModel
 
-    private var _name = MutableLiveData<String>()
-    val name: LiveData<String>
-        get() = _name
-
     private var _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
     init {
-        loadPokemonDetails()
+        initialize()
     }
 
     @SuppressLint("CheckResult")
-    fun loadPokemonDetails() {
+    fun initialize() {
         _isLoading.postValue(true)
-        service.getPokemonProperties(url)
+        service.getPokemonDetails(url)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
                     _childModel.value = it.mapDetails()
-                    _name.value = it.name
                     _isLoading.postValue(false)
                 },
                 {

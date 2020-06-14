@@ -36,6 +36,14 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    testOptions.unitTests {
+        includeAndroidResources = true
+    }
+
+    packagingOptions {
+        exclude 'README.txt'
+    }
 }
 
 dependencies {
@@ -50,6 +58,18 @@ dependencies {
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.2'
+    androidTestImplementation 'org.hamcrest:hamcrest-library:2.1'
+
+    testImplementation "androidx.test.ext:junit-ktx:1.1.1"
+    testImplementation "androidx.test:core-ktx:1.2.0"
+    testImplementation "org.robolectric:robolectric:4.3"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+
+    //https://github.com/raphw/byte-buddy
+    implementation 'net.bytebuddy:byte-buddy-android:1.9.10'
 
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
@@ -83,10 +103,6 @@ dependencies {
     // https://developer.android.com/studio/build/multidex
     implementation 'androidx.multidex:multidex:2.0.1'
 
-    // Testing
-    testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     implementation "android.arch.persistence.room:rxjava2:1.1.1"
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'

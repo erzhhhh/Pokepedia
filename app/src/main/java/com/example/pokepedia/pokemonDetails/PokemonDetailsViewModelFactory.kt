@@ -1,4 +1,4 @@
-package com.example.pokepedia.pokemonInfo
+package com.example.pokepedia.pokemonDetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

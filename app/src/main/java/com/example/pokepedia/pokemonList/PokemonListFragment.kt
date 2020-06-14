@@ -12,7 +12,7 @@ import com.example.pokepedia.OnItemClickListener
 import com.example.pokepedia.api.PokemonService
 import com.example.pokepedia.databinding.FragmentListBinding
 import com.example.pokepedia.models.PokemonModel
-import com.example.pokepedia.pokemonInfo.PokemonDetailsFragment
+import com.example.pokepedia.pokemonDetails.PokemonDetailsFragment
 import javax.inject.Inject
 
 class PokemonListFragment : Fragment() {
