@@ -39,7 +39,7 @@ open class PokemonsDataSource(
                     nextPageUrl = it.nextPageUrl
                 },
                 {
-
+                    initialLoad.postValue(NetworkState.FAILED)
                 }
             )
 
@@ -47,6 +47,8 @@ open class PokemonsDataSource(
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, PokemonModel>) {
+        initialLoad.postValue(NetworkState.LOADING)
+
         val currentPage = params.key
         val nextPage = currentPage + 1
 
@@ -55,12 +57,18 @@ open class PokemonsDataSource(
             service.getNextPage(url)
                 .subscribe(
                     {
+                        if (it.pokemonList.isEmpty()) {
+                            initialLoad.postValue(NetworkState.EMPTY)
+                        } else {
+                            initialLoad.postValue(NetworkState.LOADED)
+                            list.addAll(it.pokemonList)
+                        }
                         previousPageUrl = it.previousPageUrl
                         nextPageUrl = it.nextPageUrl
-                        list.addAll(it.pokemonList)
+
                     },
                     {
-
+                        initialLoad.postValue(NetworkState.FAILED)
                     }
                 )
 

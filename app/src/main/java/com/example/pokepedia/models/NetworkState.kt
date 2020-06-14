@@ -18,6 +18,7 @@ data class NetworkState private constructor(
         val EMPTY = NetworkState(Status.SUCCESS_EMPTY) // New
         val LOADED = NetworkState(Status.SUCCESS_LOADED) // New
         val LOADING = NetworkState(Status.RUNNING)
-        fun error(msg: String?) = NetworkState(Status.FAILED, msg)
+        val FAILED = NetworkState(Status.FAILED)
+//        fun error(msg: String?) = NetworkState(Status.FAILED, msg)
     }
 }

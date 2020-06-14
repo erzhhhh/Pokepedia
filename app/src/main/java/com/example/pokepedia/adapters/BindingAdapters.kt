@@ -6,23 +6,26 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokepedia.OnItemClickListener
 import com.example.pokepedia.R
+import com.example.pokepedia.models.NetworkState
 import com.example.pokepedia.models.PokemonModel
 
 
 @BindingAdapter(
-    value = ["pokemonItems", "itemClickListener"],
+    value = ["pokemonItems", "itemClickListener", "networkState"],
     requireAll = true
 )
 fun setPagerItems(
     recyclerView: RecyclerView,
     offerPagerItems: PagedList<PokemonModel>?,
-    itemClickListener: OnItemClickListener<PokemonModel>
+    itemClickListener: OnItemClickListener<PokemonModel>,
+    networkState: NetworkState?
 ) {
     recyclerView.run {
         (adapter as? PokemonRecyclerViewAdapter ?: PokemonRecyclerViewAdapter(itemClickListener)
             .also { it.onItemClickListener = itemClickListener }
             .also { adapter = it })
             .also { it.submitList(offerPagerItems) }
+            .also { it.setNetworkState(networkState) }
     }
 }
 
