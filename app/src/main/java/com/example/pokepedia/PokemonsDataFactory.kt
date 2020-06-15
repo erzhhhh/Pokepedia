@@ -9,10 +9,14 @@ import com.example.pokepedia.models.PokemonModel
 class PokemonsDataFactory(private val service: PokemonService) :
     DataSource.Factory<Int, PokemonModel>() {
 
+    private lateinit var dataSource: PokemonsDataSource
     val mutableDataSource: MutableLiveData<PokemonsDataSource> = MutableLiveData()
+    var retry: () -> Unit = {
+        dataSource.retryAllFailed()
+    }
 
     override fun create(): DataSource<Int, PokemonModel> {
-        val dataSource = PokemonsDataSource(service)
+        dataSource = PokemonsDataSource(service)
         mutableDataSource.postValue(dataSource)
         return dataSource
     }

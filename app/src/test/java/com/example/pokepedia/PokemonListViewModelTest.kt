@@ -4,7 +4,6 @@ import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.pokepedia.api.PokemonService
 import com.example.pokepedia.models.PokemonModel
 import com.example.pokepedia.models.PokemonResponse
@@ -21,7 +20,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.robolectric.annotation.Config
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(CustomRunner::class)
 @Config(sdk = [Build.VERSION_CODES.P])
 class PokemonListViewModelTest {
 
@@ -74,5 +73,17 @@ class PokemonListViewModelTest {
 
         val value = viewModel.childModels.getOrAwaitValue()
         assertThat(value.first().name, `is`("pikachu"))
+    }
+
+    @Test
+    fun assertError() {
+        `when`(service.getPokemonsInfo())
+            .thenReturn(Observable.error(Exception()))
+
+        viewModel.childModels.observeForever(mockObserver)
+
+        val value = viewModel.childModels.getOrAwaitValue()
+
+        assertThat(value.isEmpty(), `is`(true))
     }
 }

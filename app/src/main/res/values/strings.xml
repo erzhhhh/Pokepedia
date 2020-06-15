@@ -13,4 +13,6 @@
     <string name="pokemon_height">Height: %1$s</string>
     <string name="pokemon_weight">Weight: %1$s</string>
     <string name="pokemon_exp">Base Exp: %1$s</string>
+
+    <string name="error">Error</string>
 </resources>

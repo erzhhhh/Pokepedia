@@ -11,15 +11,13 @@ import com.example.pokepedia.api.PokemonService
 import com.example.pokepedia.models.NetworkState
 import com.example.pokepedia.models.PokemonModel
 
-class PokemonListViewModel(private val service: PokemonService) : ViewModel() {
+open class PokemonListViewModel(private val service: PokemonService) : ViewModel() {
 
     private var _childModels = MutableLiveData<PagedList<PokemonModel>>()
     var childModels: LiveData<PagedList<PokemonModel>> = _childModels
 
     private lateinit var networkState: LiveData<NetworkState>
-
-    var factory: PokemonsDataFactory = PokemonsDataFactory(service)
-
+    private lateinit var factory: PokemonsDataFactory
 
     init {
         initialize()
@@ -34,12 +32,16 @@ class PokemonListViewModel(private val service: PokemonService) : ViewModel() {
             .setPageSize(20)
             .build()
 
-        val dataSourceFactory = PokemonsDataFactory(service)
+        factory = PokemonsDataFactory(service)
 
-        childModels = LivePagedListBuilder(dataSourceFactory, pagedListConfig).build()
+        childModels = LivePagedListBuilder(factory, pagedListConfig).build()
 
-        networkState = Transformations.switchMap(dataSourceFactory.mutableDataSource) {
+        networkState = Transformations.switchMap(factory.mutableDataSource) {
             it.initialLoad
         }
+    }
+
+    fun retry() {
+        factory.retry.invoke()
     }
 }

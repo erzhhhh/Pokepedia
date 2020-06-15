@@ -5,8 +5,8 @@
     android:layout_gravity="center_horizontal"
     android:gravity="center"
     android:orientation="horizontal"
-    android:paddingStart="8dp"
-    android:paddingEnd="8dp">
+    android:paddingStart="@dimen/indent_8"
+    android:paddingEnd="@dimen/indent_8">
 
     <ProgressBar
         android:layout_width="wrap_content"

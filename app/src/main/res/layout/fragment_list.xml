@@ -13,6 +13,10 @@
             name="itemClickListener"
             type="com.example.pokepedia.OnItemClickListener&lt;com.example.pokepedia.models.PokemonModel>" />
 
+        <variable
+            name="retryClickListener"
+            type="com.example.pokepedia.OnRetryClickListener" />
+
     </data>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -20,6 +24,7 @@
         itemClickListener="@{itemClickListener}"
         networkState="@{viewModel.currentNetworkState()}"
         pokemonItems="@{viewModel.childModels}"
+        retryClickListener="@{retryClickListener}"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />

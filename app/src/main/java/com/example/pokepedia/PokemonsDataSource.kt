@@ -6,6 +6,8 @@ import androidx.paging.PageKeyedDataSource
 import com.example.pokepedia.api.PokemonService
 import com.example.pokepedia.models.NetworkState
 import com.example.pokepedia.models.PokemonModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 
 open class PokemonsDataSource(
@@ -15,6 +17,13 @@ open class PokemonsDataSource(
     val initialLoad: MutableLiveData<NetworkState> = MutableLiveData()
     private var nextPageUrl: String? = null
     private var previousPageUrl: String? = null
+    private var retry: (() -> Any)? = null
+
+    fun retryAllFailed() {
+        val prevRetry = retry
+        retry = null
+        prevRetry?.invoke()
+    }
 
     @SuppressLint("CheckResult")
     override fun loadInitial(
@@ -28,22 +37,24 @@ open class PokemonsDataSource(
 
         val list = mutableListOf<PokemonModel>()
         service.getPokemonsInfo()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    if (it.pokemonList.isEmpty()) {
-                        initialLoad.postValue(NetworkState.EMPTY)
-                    } else {
-                        initialLoad.postValue(NetworkState.LOADED)
-                        list.addAll(it.pokemonList)
-                    }
+                    initialLoad.postValue(NetworkState.LOADED)
+                    list.addAll(it.pokemonList)
                     nextPageUrl = it.nextPageUrl
+                    retry = null
+
+                    callback.onResult(list, 0, nextPage)
                 },
                 {
-                    initialLoad.postValue(NetworkState.FAILED)
+                    retry = {
+                        loadInitial(params, callback)
+                    }
+                    initialLoad.value = NetworkState.error(it.message)
                 }
             )
-
-        callback.onResult(list, 0, nextPage)
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, PokemonModel>) {
@@ -55,24 +66,25 @@ open class PokemonsDataSource(
         nextPageUrl?.let { url ->
             val list = mutableListOf<PokemonModel>()
             service.getNextPage(url)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
-                        if (it.pokemonList.isEmpty()) {
-                            initialLoad.postValue(NetworkState.EMPTY)
-                        } else {
-                            initialLoad.postValue(NetworkState.LOADED)
-                            list.addAll(it.pokemonList)
-                        }
+                        initialLoad.postValue(NetworkState.LOADED)
+                        list.addAll(it.pokemonList)
                         previousPageUrl = it.previousPageUrl
                         nextPageUrl = it.nextPageUrl
+                        retry = null
 
+                        callback.onResult(list, nextPage)
                     },
                     {
-                        initialLoad.postValue(NetworkState.FAILED)
+                        retry = {
+                            loadAfter(params, callback)
+                        }
+                        initialLoad.value = NetworkState.error(it.message)
                     }
                 )
-
-            callback.onResult(list, nextPage)
         }
     }
 

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.pokepedia.App
 import com.example.pokepedia.OnItemClickListener
+import com.example.pokepedia.OnRetryClickListener
 import com.example.pokepedia.api.PokemonService
 import com.example.pokepedia.databinding.FragmentListBinding
 import com.example.pokepedia.models.PokemonModel
@@ -52,6 +53,12 @@ class PokemonListFragment : Fragment() {
                     PokemonDetailsFragment.newInstance(it)
                         .show(childFragmentManager, PokemonDetailsFragment::class.java.name)
                 }
+            }
+        }
+
+        binding.retryClickListener = object : OnRetryClickListener {
+            override fun onButtonClick() {
+                viewModel.retry()
             }
         }
     }

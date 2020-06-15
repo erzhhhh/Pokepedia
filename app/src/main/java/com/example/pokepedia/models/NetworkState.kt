@@ -3,22 +3,19 @@ package com.example.pokepedia.models
 @Suppress("DataClassPrivateConstructor")
 data class NetworkState private constructor(
     val status: Status,
-    val msg: String? = null
+    val message: String? = null
 ) {
 
     enum class Status {
         RUNNING,
-        SUCCESS_LOADED, // New
-        SUCCESS_EMPTY, // New
+        SUCCESS_LOADED,
         FAILED
     }
 
     companion object {
 
-        val EMPTY = NetworkState(Status.SUCCESS_EMPTY) // New
-        val LOADED = NetworkState(Status.SUCCESS_LOADED) // New
+        val LOADED = NetworkState(Status.SUCCESS_LOADED)
         val LOADING = NetworkState(Status.RUNNING)
-        val FAILED = NetworkState(Status.FAILED)
-//        fun error(msg: String?) = NetworkState(Status.FAILED, msg)
+        fun error(msg: String?) = NetworkState(Status.FAILED, msg)
     }
 }
