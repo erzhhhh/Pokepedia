@@ -1,6 +1,7 @@
 package com.example.pokepedia.adapters
 
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +10,7 @@ import com.example.pokepedia.OnRetryClickListener
 import com.example.pokepedia.R
 import com.example.pokepedia.models.NetworkState
 import com.example.pokepedia.models.PokemonModel
+import com.example.pokepedia.pokemonDetails.PokemonDetailsViewModel
 
 
 @BindingAdapter(
@@ -99,4 +101,14 @@ fun bindExp(
     } else {
         textView.text = textView.context.getString(R.string.pokemon_exp, pokemonText.orEmpty())
     }
+}
+
+
+@BindingAdapter(value = ["isError"])
+fun setErrorVisibility(
+    textView: TextView,
+    error: PokemonDetailsViewModel.PokemonError?
+) {
+    textView.isVisible = error?.isError ?: false
+    textView.text = error?.message.orEmpty()
 }

@@ -7,10 +7,6 @@
         <import type="android.view.View" />
 
         <variable
-            name="isLoading"
-            type="java.lang.Boolean" />
-
-        <variable
             name="viewModel"
             type="com.example.pokepedia.pokemonDetails.PokemonDetailsViewModel" />
 
@@ -28,7 +24,8 @@
             android:paddingStart="@dimen/indent_16"
             android:paddingTop="@dimen/indent_24"
             android:paddingEnd="@dimen/indent_16"
-            android:paddingBottom="@dimen/indent_24">
+            android:paddingBottom="@dimen/indent_24"
+            android:visibility="@{viewModel.isError().error ? View.INVISIBLE : View.VISIBLE}">
 
             <TextView
                 android:id="@+id/nameTextView"
@@ -76,12 +73,50 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ProgressBar
-            android:id="@+id/progressBar"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.INVISIBLE}" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="@{viewModel.isError().error || viewModel.isLoading ? View.VISIBLE : View.INVISIBLE}">
+
+            <TextView
+                android:id="@+id/errorTextView"
+                isError="@{viewModel.isError}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:paddingTop="@dimen/indent_24"
+                android:paddingBottom="@dimen/indent_16"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.INVISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/retryButton"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="@{(v) -> viewModel.onRetryDetailClick()}"
+                android:text="@string/error"
+                android:visibility="@{viewModel.isError().error ? View.VISIBLE : View.INVISIBLE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/errorTextView" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
 
 </layout>

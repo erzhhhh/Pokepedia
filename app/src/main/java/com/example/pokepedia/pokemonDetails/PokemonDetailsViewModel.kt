@@ -23,6 +23,10 @@ class PokemonDetailsViewModel(
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
+    private var _isError = MutableLiveData<PokemonError>()
+    val isError: LiveData<PokemonError>
+        get() = _isError
+
     init {
         initialize()
     }
@@ -37,10 +41,21 @@ class PokemonDetailsViewModel(
                 {
                     _childModel.value = it.mapDetails()
                     _isLoading.postValue(false)
+                    _isError.postValue(PokemonError(false, ""))
                 },
                 {
-
+                    _isLoading.postValue(false)
+                    _isError.postValue(PokemonError(true, it.message.orEmpty()))
                 }
             )
     }
+
+    fun onRetryDetailClick() {
+        initialize()
+    }
+
+    data class PokemonError(
+        val isError: Boolean,
+        val message: String
+    )
 }
